@@ -7,9 +7,10 @@ public class Player : MonoBehaviour
     //parameters
     public float swimSpeed;
     float fastSwimFactor = 1;
-    public float carryWeightFactor=1f;
+    [HideInInspector]public float carryWeightFactor=1f;
     public float jumpForce = 20f;                           // only applicable when on boat or on surface
 
+    public int localScore;
     int throwableItems;
 
     //references to objects
