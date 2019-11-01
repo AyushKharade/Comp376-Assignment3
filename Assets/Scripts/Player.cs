@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     //parameters
     public float swimSpeed;
     float fastSwimFactor = 1;
-    [HideInInspector]public float carryWeightFactor=1f;
+    public float carryWeightFactor=1f;
     public float jumpForce = 20f;                           // only applicable when on boat or on surface
 
     public int localScore;
@@ -16,10 +16,13 @@ public class Player : MonoBehaviour
     //references to objects
     public Transform facingDirection;
     Rigidbody rigidbodyRef;
+    public Camera camRef;
+
+
 
 
     //repspawn point
-    Vector3 respawnPoint;
+    public Transform respawnPoint;
     
 
     //Animator animator;
@@ -30,10 +33,11 @@ public class Player : MonoBehaviour
     bool onBoat;
     bool swimming;         // swim animation
 
+    public bool LookingAtInteractable;
+
     // Start is called before the first frame update
     void Start()
     {
-        respawnPoint = transform.position;
         rigidbodyRef = GetComponent<Rigidbody>();
         onSurface = true;
     }
@@ -43,6 +47,7 @@ public class Player : MonoBehaviour
     {
         if (!isDead)
         {
+            //RaycastInteract();
             PlayerMovement();
             Abilities();
         }
@@ -51,6 +56,9 @@ public class Player : MonoBehaviour
         {
             //coutdown and respawn
         }
+
+        //boat distance, test, the line below works
+        //Debug.Log("Distance to boat: "+(int)(Vector3.Distance(transform.position,respawnPoint.position))+" m.");
     }
 
 
@@ -116,6 +124,32 @@ public class Player : MonoBehaviour
     private void Abilities()
     {
         // figurines
+    }
+
+    // doesnt work properly
+    private void RaycastInteract()
+    {
+        Ray ray = camRef.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 10f))
+        {
+            if (hit.collider.tag == "GoldBar")
+            {
+                LookingAtInteractable = true;
+            }
+            else if(hit.collider==null)
+            {
+                LookingAtInteractable = false;
+            }
+        }
+        
+        if (hit.collider != null)
+        {
+            Debug.Log("Looking at " + hit.collider.tag);
+            Debug.DrawRay(transform.position, hit.transform.position, Color.green);
+        }
+        // draw ray
+        
     }
 
 }

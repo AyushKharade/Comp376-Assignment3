@@ -26,9 +26,9 @@ public class Underwater : MonoBehaviour
     {
         if (other.tag == "MainCamera")
         {
-            playerRef.GetComponent<Rigidbody>().useGravity=false;
+            //playerRef.GetComponent<Rigidbody>().useGravity=false;
             playerRef.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            //other.GetComponent<Rigidbody>().AddForce(Vector2.down*0.5f,ForceMode.Impulse);
+            Physics.gravity = new Vector3(0,-1.5f,0);
         }
     }
 
@@ -46,8 +46,8 @@ public class Underwater : MonoBehaviour
         if (other.tag == "MainCamera")
         {
             directionalLightRef.color = originalColor;
-            //other.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            playerRef.GetComponent<Rigidbody>().useGravity = true;
+            //playerRef.GetComponent<Rigidbody>().useGravity = true;
+            Physics.gravity = new Vector3(0, -9.81f, 0);
         }
     }
 }
