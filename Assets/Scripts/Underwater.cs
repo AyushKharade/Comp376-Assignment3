@@ -14,6 +14,7 @@ public class Underwater : MonoBehaviour
     void Start()
     {
         originalColor = directionalLightRef.color;
+        
     }
 
     // Update is called once per frame

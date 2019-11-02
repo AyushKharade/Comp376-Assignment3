@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7380422487332879960}
   - component: {fileID: 2528265315165295941}
   - component: {fileID: 2528265315165295940}
+  - component: {fileID: -4526379162358888876}
   m_Layer: 0
   m_Name: Bird_Fig_Prefab
   m_TagString: Untagged
@@ -63,6 +64,18 @@ CapsuleCollider:
   m_Height: 53.25
   m_Direction: 1
   m_Center: {x: -9.45, y: 31.91, z: 4.17}
+--- !u!114 &-4526379162358888876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5780333832583580747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47c8c09eb33a74744a2a629e5ba82531, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5855446502890512178
 GameObject:
   m_ObjectHideFlags: 0

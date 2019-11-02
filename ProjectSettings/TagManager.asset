@@ -6,6 +6,7 @@ TagManager:
   tags:
   - E_Press
   - GoldBar
+  - Director
   layers:
   - Default
   - TransparentFX

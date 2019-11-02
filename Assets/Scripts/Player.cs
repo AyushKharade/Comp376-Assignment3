@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Player : MonoBehaviour
 
     public int localScore;
     public int throwableItems;
+    public int itemsCarrying;
 
     //references to objects
     public Transform facingDirection;
@@ -19,12 +21,14 @@ public class Player : MonoBehaviour
     public Camera camRef;
     public GameObject localFigurine;
     public GameObject FigurinePrefab;
+    public GameObject UI_E;
+    Director Dscript;
 
 
 
     // timer variables
     float throwTimer;
-
+    float interactTimer;
 
 
 
@@ -43,6 +47,7 @@ public class Player : MonoBehaviour
     bool onBoat;
     bool Swimming;         // swim animation
     bool isThrowing;
+    [HideInInspector] public bool interacting;
 
     [HideInInspector]public bool LookingAtInteractable;
 
@@ -52,6 +57,8 @@ public class Player : MonoBehaviour
         rigidbodyRef = GetComponent<Rigidbody>();
         onSurface = true;
         animator = playerArms.GetComponent<Animator>();
+
+        Dscript = GameObject.FindGameObjectWithTag("Director").GetComponent<Director>();
     }
 
     // Update is called once per frame
@@ -62,6 +69,10 @@ public class Player : MonoBehaviour
             //RaycastInteract();
             PlayerMovement();
             Abilities();
+
+            //reset velocity if there any for now
+            if (GetComponent<Rigidbody>().velocity != Vector3.zero && !onSurface)
+                GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
 
         if (isDead)
@@ -71,6 +82,24 @@ public class Player : MonoBehaviour
 
         //boat distance, test, the line below works
         //Debug.Log("Distance to boat: "+(int)(Vector3.Distance(transform.position,respawnPoint.position))+" m.");
+
+
+
+        // interact animation.
+        if (interacting)
+        {
+            if (interactTimer > 0.8f)
+            {
+                interacting = false;
+                interactTimer = 0f;
+                animator.SetBool("interacting",false);
+            }
+            else
+            {
+                interactTimer += Time.deltaTime;
+                animator.SetBool("interacting", true);
+            }
+        }
     }
 
 
@@ -228,4 +257,58 @@ public class Player : MonoBehaviour
         
     }
 
+
+
+
+
+    // collison to pick up objects
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "GoldBar")
+        {
+            UI_E.GetComponent<Image>().enabled = true;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "GoldBar")
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (carryWeightFactor <= 0.45f)
+                {
+                    Debug.Log("Cannot carry more gold bars.");
+                }
+                else
+                {
+                    if (!other.gameObject.GetComponent<GoldBar>().pickedUp)       // other wise it registers same objecy twice
+                    {
+                        other.gameObject.GetComponent<GoldBar>().pickedUp = true;
+                        localScore += other.gameObject.GetComponent<GoldBar>().value;
+                        Debug.Log("Picked up value: " + other.gameObject.GetComponent<GoldBar>().value + ", weighing: " + other.gameObject.GetComponent<GoldBar>().weightFactor);
+                        carryWeightFactor -= other.gameObject.GetComponent<GoldBar>().weightFactor;
+                        interacting = true;
+                        UI_E.GetComponent<Image>().enabled = false;
+                        itemsCarrying++;
+                        Dscript.goldCount -= 1;
+                        Destroy(other.gameObject);
+                    }
+                }
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "GoldBar")
+        {
+            UI_E.GetComponent<Image>().enabled = false;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
 }
