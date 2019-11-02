@@ -11,35 +11,47 @@ public class Player : MonoBehaviour
     public float jumpForce = 20f;                           // only applicable when on boat or on surface
 
     public int localScore;
-    int throwableItems;
+    public int throwableItems;
 
     //references to objects
     public Transform facingDirection;
     Rigidbody rigidbodyRef;
     public Camera camRef;
+    public GameObject localFigurine;
+    public GameObject FigurinePrefab;
+
+
+
+    // timer variables
+    float throwTimer;
+
 
 
 
 
     //repspawn point
     public Transform respawnPoint;
-    
+
 
     //Animator animator;
+    public GameObject playerArms;
+    Animator animator;
 
     // states
     [HideInInspector]public bool isDead;
     public bool onSurface;
     bool onBoat;
-    bool swimming;         // swim animation
+    bool Swimming;         // swim animation
+    bool isThrowing;
 
-    public bool LookingAtInteractable;
+    [HideInInspector]public bool LookingAtInteractable;
 
     // Start is called before the first frame update
     void Start()
     {
         rigidbodyRef = GetComponent<Rigidbody>();
         onSurface = true;
+        animator = playerArms.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -70,24 +82,48 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             transform.position += facingDirection.forward * swimSpeed * fastSwimFactor* Time.deltaTime;
-
+            animator.SetBool("isSwimming", true);
         }
 
         if (Input.GetKey(KeyCode.S))
         {
             transform.position += facingDirection.forward * -swimSpeed * fastSwimFactor*Time.deltaTime;
+            animator.SetBool("isSwimming", true);
         }
 
-        // A & D, strafe, dot product
+        
         if (Input.GetKey(KeyCode.A))
         {
             transform.position += facingDirection.right * -swimSpeed * fastSwimFactor/2*Time.deltaTime;
+            animator.SetBool("isSwimming", true);
         }
 
         if (Input.GetKey(KeyCode.D))
         {
             transform.position += facingDirection.right * swimSpeed *fastSwimFactor/2* Time.deltaTime;
+            animator.SetBool("isSwimming", true);
         }
+
+        // letting go keys
+        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D))
+        {
+            animator.SetBool("isSwimming",false);
+        }
+
+
+        //animation state for surface
+        if (onSurface)
+            animator.SetBool("onSurface", true);
+        else
+            animator.SetBool("onSurface",false);
+
+
+
+
+
+
+
+
 
         // jump
         if (Input.GetKeyDown(KeyCode.Space) && onSurface)
@@ -109,6 +145,11 @@ public class Player : MonoBehaviour
 
 
 
+
+
+
+
+
         // fast swimming
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -123,7 +164,42 @@ public class Player : MonoBehaviour
     //abilities
     private void Abilities()
     {
-        // figurines
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (throwableItems > 0 && !onSurface)
+            {
+                throwableItems--;
+                localFigurine.SetActive(true);
+                isThrowing = true;
+                animator.SetBool("throwing",true);
+            }
+            else
+            {
+                //make UI red and white
+            }
+        }
+
+
+        // if throwing was true
+        if (isThrowing)
+        {
+            if (throwTimer > 0.75f)
+            {
+                localFigurine.SetActive(false);
+                isThrowing = false;
+                throwTimer = 0;
+                animator.SetBool("throwing", false);
+
+                //instantiate
+                Vector3 forceDirection = localFigurine.transform.position - transform.position;
+                GameObject temp=Instantiate(FigurinePrefab,localFigurine.transform.position,Quaternion.identity);
+                temp.GetComponent<Rigidbody>().AddForce(forceDirection*20f,ForceMode.Impulse);
+            }
+            else
+            {
+                throwTimer += Time.deltaTime;
+            }
+        }
     }
 
     // doesnt work properly
