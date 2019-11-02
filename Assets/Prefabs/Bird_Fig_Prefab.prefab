@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -4526379162358888876}
   m_Layer: 0
   m_Name: Bird_Fig_Prefab
-  m_TagString: Untagged
+  m_TagString: Figurine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

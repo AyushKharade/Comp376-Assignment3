@@ -32,20 +32,13 @@ public class Camera_MouseLook : MonoBehaviour
 
         xRotation=Mathf.Clamp(xRotation,-85f,80f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-
-        //if(!playerPosRef.GetComponent<Player>().onSurface)
-            //facingDirection.transform.rotat
-        //else
+        if (!playerPosRef.GetComponent<Player>().isDead)
+        {
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             facingDirection.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-
-
-
-
-
-        // player horizontal rotation
-        playerT.Rotate(Vector3.up * mouseX);
-
+            // player horizontal rotation
+            playerT.Rotate(Vector3.up * mouseX);
+        }
 
     }
 }

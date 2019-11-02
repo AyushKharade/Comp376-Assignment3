@@ -6,14 +6,18 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     //parameters
+
+    public int health=2;
+
+
     public float swimSpeed;
     float fastSwimFactor = 1;
     public float carryWeightFactor=1f;
-    public float jumpForce = 20f;                           // only applicable when on boat or on surface
+    float jumpForce = 10f;                           // only applicable when on boat or on surface
 
-    public int localScore;
+    [HideInInspector]public int localScore;
     public int throwableItems;
-    public int itemsCarrying;
+    [HideInInspector]public int itemsCarrying;
 
     //references to objects
     public Transform facingDirection;
@@ -25,11 +29,22 @@ public class Player : MonoBehaviour
     Director Dscript;
 
 
+    //oxygen cylinder
+    //[Range(0f,100f)]
+    public float oxygen = 100f;
+
 
     // timer variables
     float throwTimer;
     float interactTimer;
 
+    //respawn timer
+    float respawnTimer;
+    float respawnTime = 4f;
+
+
+    // UI Elements
+    public GameObject OxygenUI;
 
 
 
@@ -48,10 +63,14 @@ public class Player : MonoBehaviour
     bool Swimming;         // swim animation
     bool isThrowing;
     [HideInInspector] public bool interacting;
-
     [HideInInspector]public bool LookingAtInteractable;
+    //______________________________________________________________________________________________________
 
-    // Start is called before the first frame update
+
+
+
+
+
     void Start()
     {
         rigidbodyRef = GetComponent<Rigidbody>();
@@ -66,9 +85,9 @@ public class Player : MonoBehaviour
     {
         if (!isDead)
         {
-            //RaycastInteract();
             PlayerMovement();
             Abilities();
+            ManageOxygen();
 
             //reset velocity if there any for now
             if (GetComponent<Rigidbody>().velocity != Vector3.zero && !onSurface)
@@ -77,7 +96,17 @@ public class Player : MonoBehaviour
 
         if (isDead)
         {
+            Debug.Log("Dead, respawning in: "+(respawnTime-respawnTimer));
             //coutdown and respawn
+            if (respawnTimer > respawnTime)
+            {
+                Respawn();
+                respawnTimer = 0f;
+            }
+            else
+            {
+                respawnTimer += Time.deltaTime;
+            }
         }
 
         //boat distance, test, the line below works
@@ -99,7 +128,11 @@ public class Player : MonoBehaviour
                 interactTimer += Time.deltaTime;
                 animator.SetBool("interacting", true);
             }
+
+
         }
+
+        
     }
 
 
@@ -159,18 +192,7 @@ public class Player : MonoBehaviour
         {
             rigidbodyRef.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
-
-        else if (Input.GetKey(KeyCode.Space) && !onSurface)
-        {
-            transform.Translate(Vector3.up * swimSpeed * Time.deltaTime);
-        }
-
-        // go down fast
-        if (Input.GetKey(KeyCode.LeftControl) && !onSurface)
-        {
-            transform.Translate(Vector3.down * swimSpeed * Time.deltaTime);
-        }
-
+        
 
 
 
@@ -258,13 +280,71 @@ public class Player : MonoBehaviour
     }
 
 
+    private void ManageOxygen()
+    {
+        //oxygen
+        if (!onSurface)
+        {
+            if (oxygen <= 0)
+            {
+                //kill player
+                RegisterHit();
+            }
+            else
+            {
+                oxygen -= 1.2f * Time.deltaTime;
+                if (oxygen < 0)
+                    oxygen = 0;
+            }
+        }
+        else {
+            if (oxygen < 100)
+            {
+                oxygen += 10 * Time.deltaTime;
+            }
+        }
+
+        //Update UI
+        float UI_oxy_value = oxygen / 100f;
+        OxygenUI.transform.localScale = new Vector3(UI_oxy_value,1,1);
+        if (oxygen < 25f)
+        {
+            OxygenUI.GetComponentInChildren<Image>().color = new Vector4(166/255f,51/255f,31/255f, 1);
+        }
+        else
+        {
+            OxygenUI.GetComponentInChildren<Image>().color = new Vector4(37 / 255f, 51 / 255f, 106 / 255f, 1);
+        }
+    }
 
 
+    public void RegisterHit()
+    {
+        health--;
+        if (health <= 0)
+        {
+            isDead = true;
+            GetComponent<Rigidbody>().useGravity = true;
+        }
+    }
+
+    public void Respawn()
+    {
+        health = 2;
+        isDead = false;
+        localScore = 0;
+        throwableItems = 6;
+        oxygen = 100f;
+        transform.position = respawnPoint.position;
+        GetComponent<Rigidbody>().useGravity = true;
+        UI_E.GetComponent<Image>().enabled = false;
+
+    }
 
     // collison to pick up objects
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "GoldBar")
+        if (other.tag == "GoldBar" && !isDead)
         {
             UI_E.GetComponent<Image>().enabled = true;
         }
@@ -272,7 +352,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "GoldBar")
+        if (other.tag == "GoldBar" && !isDead)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {

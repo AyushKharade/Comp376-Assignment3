@@ -14,7 +14,7 @@ public class Underwater : MonoBehaviour
     void Start()
     {
         originalColor = directionalLightRef.color;
-        
+        Physics.gravity = new Vector3(0, -9.81f, 0);
     }
 
     // Update is called once per frame
