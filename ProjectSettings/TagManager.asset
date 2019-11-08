@@ -8,6 +8,8 @@ TagManager:
   - GoldBar
   - Director
   - Figurine
+  - OctopusProjectile
+  - Shark
   layers:
   - Default
   - TransparentFX
