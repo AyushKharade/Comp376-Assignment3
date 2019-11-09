@@ -8,12 +8,14 @@ public class Player : MonoBehaviour
     //parameters
 
     public int health=2;
-
-
     public float swimSpeed;
     float fastSwimFactor = 1;
     public float carryWeightFactor=1f;
     float jumpForce = 10f;                           // only applicable when on boat or on surface
+
+
+    public int SharksChasing = 0;
+
 
     [HideInInspector]public int localScore;
     public int throwableItems;
@@ -32,7 +34,7 @@ public class Player : MonoBehaviour
     //oxygen cylinder
     //[Range(0f,100f)]
     public float oxygen = 100f;
-
+    [HideInInspector]public float oxyenDepletionRate = 1.5f;
 
     // timer variables
     float throwTimer;
@@ -81,6 +83,7 @@ public class Player : MonoBehaviour
         animator = playerArms.GetComponent<Animator>();
 
         Dscript = GameObject.FindGameObjectWithTag("Director").GetComponent<Director>();
+        oxyenDepletionRate = 1.5f;
     }
 
     // Update is called once per frame
@@ -297,7 +300,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                oxygen -= 1.2f * Time.deltaTime;
+                oxygen -= oxyenDepletionRate * Time.deltaTime;
                 if (oxygen < 0)
                     oxygen = 0;
             }
@@ -355,6 +358,9 @@ public class Player : MonoBehaviour
         GetComponent<Rigidbody>().useGravity = true;
         UI_E.GetComponent<Image>().enabled = false;
         animator.SetBool("isDead", false);
+
+        SharksChasing = 0;
+
 
         // ui
         health1.enabled = true;

@@ -99,6 +99,7 @@ public class Director : MonoBehaviour
             Vector3 spawnPos = new Vector3(130, Random.Range(-44,19),Random.Range(-85,85));
             GameObject temp= Instantiate(sharkPrefab, spawnPos, Quaternion.identity);
             temp.GetComponent<Shark>().swimSpeed += sharkSpeedBoost;
+            temp.transform.Rotate(0, -90, 0);
             sharkCount++;
         }
 
@@ -140,6 +141,7 @@ public class Director : MonoBehaviour
     private void IncreaseLevel3()
     {
         // spawn octopuses
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().oxyenDepletionRate += 1.75f;
         level3 = true;
         level++;
         LevelUI.text = "Level: " + level;
