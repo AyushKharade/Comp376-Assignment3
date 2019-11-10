@@ -140,9 +140,9 @@ public class Shark : MonoBehaviour
         if (collision.collider.tag == "Player")
         {
             //damage player
-            Pscript.RegisterHit();
+            collision.collider.gameObject.GetComponent<Player>().RegisterHit();
             alreadyAttacked = true;
-            target.GetComponent<Player>().SharksChasing -= 1;
+            collision.collider.gameObject.GetComponent<Player>().SharksChasing -= 1;
             target = null;
         }
     }

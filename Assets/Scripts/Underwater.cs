@@ -53,6 +53,7 @@ public class Underwater : MonoBehaviour
             directionalLightRef.color = originalColor;
             playerRef.GetComponent<Rigidbody>().useGravity = true;
             playerRef.GetComponent<Player>().onSurface = true;
+            playerRef.GetComponent<Player>().SharksChasing = 0;
             AudioManager.instance.sounds[1].volume = 0;
             //Physics.gravity = new Vector3(0, -9.81f, 0);
         }

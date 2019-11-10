@@ -56,12 +56,13 @@ public class Boat_Script : MonoBehaviour
                 Pscript.itemsCarrying = 0;
                 Pscript.throwableItems = 6;
                 Pscript.oxygen = 100f;
-                //
                 // update UI
                 UI_Score.GetComponent<Text>().text = "Score: " + totalScore;
 
                 //animation:
                 Pscript.interacting = true;
+
+                playerRef.GetComponent<Player>().SharksChasing = 0;
             }
         }
     }

@@ -83,6 +83,11 @@ public class Octopus : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+        if(existTimer>100f)
+        {
+            GameObject.FindGameObjectWithTag("Director").GetComponent<Director>().octopusCount -= 1;
+            Destroy(this.gameObject);
+        }
     }
 
 
