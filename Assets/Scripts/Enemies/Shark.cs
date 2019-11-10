@@ -8,7 +8,7 @@ public class Shark : MonoBehaviour
     Player Pscript;
     Director Dscript;
 
-    GameObject target;           // target could be player or a figurine
+    public GameObject target;           // target could be player or a figurine
 
     Vector3 originalRotation = new Vector3(0, -90, 0);
     public float swimSpeed=9f;
@@ -16,6 +16,7 @@ public class Shark : MonoBehaviour
 
     float chaseTimer;
 
+    bool alreadyAttacked;
 
     Vector3 chaseDirection;
     void Start()
@@ -37,7 +38,7 @@ public class Shark : MonoBehaviour
             }
             Movement();
         }
-        else
+        else if(!alreadyAttacked)
             ChaseTarget();
         SelfDelete();
     }
@@ -116,7 +117,7 @@ public class Shark : MonoBehaviour
         if (other.tag == "Player")
         {
             //only player wasnt already being chased by two sharks
-            if (other.GetComponent<Player>().SharksChasing < 1)
+            if (other.GetComponent<Player>().SharksChasing < 1 && !alreadyAttacked)
             {
                 AudioManager.instance.Play("Detected");
                 target = other.gameObject;
@@ -140,6 +141,9 @@ public class Shark : MonoBehaviour
         {
             //damage player
             Pscript.RegisterHit();
+            alreadyAttacked = true;
+            target.GetComponent<Player>().SharksChasing -= 1;
+            target = null;
         }
     }
     

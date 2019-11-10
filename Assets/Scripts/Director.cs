@@ -138,7 +138,7 @@ public class Director : MonoBehaviour
         if(levelTimer > 30f && !level2)
               IncreaseLevel2();
 
-        if (levelTimer > 5f && !level3)
+        if (levelTimer > 55f && !level3)
             IncreaseLevel3();
 
         if (levelTimer > 100f && !level4)

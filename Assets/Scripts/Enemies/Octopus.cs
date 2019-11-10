@@ -20,7 +20,7 @@ public class Octopus : MonoBehaviour
 
     void Start()
     {
-        
+        OctopousSwimSpeed += Random.Range(0f, 0.4f);
     }
 
     void Update()
@@ -43,11 +43,13 @@ public class Octopus : MonoBehaviour
             {
                 transform.Rotate(0, 180, 0);
                 faceDir = -1;
+                OctopousSwimSpeed = Random.Range(0.2f, 0.6f);
             }
             else if (transform.position.z < -150)
             {
                 transform.Rotate(0, -180, 0);
                 faceDir = 1;
+                OctopousSwimSpeed = Random.Range(0.2f, 0.6f);
             }
 
             // translation

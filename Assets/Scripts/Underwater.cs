@@ -31,7 +31,7 @@ public class Underwater : MonoBehaviour
             playerRef.GetComponent<Rigidbody>().velocity = Vector3.zero;
             playerRef.GetComponent<Player>().onSurface = false;
             AudioManager.instance.sounds[1].volume = 0.7f;
-            Debug.Log(AudioManager.instance.sounds[1].name);
+            //Debug.Log(AudioManager.instance.sounds[1].name);
             //Physics.gravity = new Vector3(0,-1.5f,0);
         }
     }

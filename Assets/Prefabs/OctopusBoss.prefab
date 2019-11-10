@@ -60,8 +60,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aee3c5c21afe2cc44a35de48056c4973, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 0}
   projectilePrefab: {fileID: 7657436023405720960, guid: 477ae30a86bcf644e86654ee3974e1b4,
     type: 3}
+  existTimer: 0
 --- !u!135 &3447091116482541423
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -73,7 +75,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 27.45
+  m_Radius: 71.8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &3447091115218661799
 PrefabInstance:
