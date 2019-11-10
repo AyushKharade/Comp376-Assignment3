@@ -5,7 +5,7 @@ using UnityEngine;
 public class Octo_Projectiles : MonoBehaviour
 {
 
-    float deleteTime = 10f;
+    float deleteTime = 7f;
     float timer;
     // Start is called before the first frame update
     void Start()

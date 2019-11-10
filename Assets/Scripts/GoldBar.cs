@@ -30,10 +30,19 @@ public class GoldBar : MonoBehaviour
         DScript = GameObject.FindGameObjectWithTag("Director").GetComponent<Director>();
 
         pickedUp = false;
+        expireTime= Random.Range(35f, 50f);
     }
 
     void Update()
     {
+        /*
+        expireTimer += Time.deltaTime;
+        if (expireTimer > expireTime)
+        {
+            GameObject.FindGameObjectWithTag("Director").GetComponent<Director>().goldCount -= 1;
+            Destroy(this.gameObject);
+        }
+        */
     }
 
     // agitateEnemies();

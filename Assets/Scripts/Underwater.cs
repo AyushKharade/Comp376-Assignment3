@@ -30,6 +30,8 @@ public class Underwater : MonoBehaviour
             playerRef.GetComponent<Rigidbody>().useGravity=false;
             playerRef.GetComponent<Rigidbody>().velocity = Vector3.zero;
             playerRef.GetComponent<Player>().onSurface = false;
+            AudioManager.instance.sounds[1].volume = 0.7f;
+            Debug.Log(AudioManager.instance.sounds[1].name);
             //Physics.gravity = new Vector3(0,-1.5f,0);
         }
     }
@@ -40,6 +42,7 @@ public class Underwater : MonoBehaviour
         {
             directionalLightRef.color = new Vector4(40 / 255f, 50 / 255f, 142 / 255f, 1);
             playerRef.GetComponent<Player>().onSurface = false;
+            
         }
     }
 
@@ -50,6 +53,7 @@ public class Underwater : MonoBehaviour
             directionalLightRef.color = originalColor;
             playerRef.GetComponent<Rigidbody>().useGravity = true;
             playerRef.GetComponent<Player>().onSurface = true;
+            AudioManager.instance.sounds[1].volume = 0;
             //Physics.gravity = new Vector3(0, -9.81f, 0);
         }
     }

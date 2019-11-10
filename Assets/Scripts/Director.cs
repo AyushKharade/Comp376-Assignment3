@@ -41,6 +41,11 @@ public class Director : MonoBehaviour
 
 
     // octopus
+    bool spawnOctopus;
+    bool octopusCooldown;
+    float cooldownTimer;
+    public int octopusCount=0;
+    public GameObject octopusPrefab;
 
 
     // UI ELEMENTS
@@ -85,7 +90,7 @@ public class Director : MonoBehaviour
             //if(index<2)
               //  Instantiate(GoldArray[index],spawnPos, Quaternion.identity);
             //else
-                Instantiate(GoldArray[index],spawnPos, Quaternion.Euler(-90,0,0));
+                Instantiate(GoldArray[index],spawnPos, Quaternion.Euler(-90,Random.Range(0f,360f),0));
 
             
             goldCount++;
@@ -106,8 +111,23 @@ public class Director : MonoBehaviour
 
         // octopus spawn
 
-        if (level3)
-        { }
+        if (spawnOctopus) // works same if(level3)
+        {
+            if (octopusCount < maxOctopus && !octopusCooldown)
+            {
+                    Instantiate(octopusPrefab, new Vector3(Random.Range(-85,85),Random.Range(-44,17),-149), Quaternion.identity);
+                    octopusCooldown = true;
+            }
+            else if (octopusCooldown)
+            {
+                cooldownTimer += Time.deltaTime;
+                if (cooldownTimer > 65f)
+                {
+                    octopusCooldown = false;
+                    cooldownTimer = 0f;
+                }
+            }
+        }
     }
 
     void Update()
@@ -118,7 +138,7 @@ public class Director : MonoBehaviour
         if(levelTimer > 30f && !level2)
               IncreaseLevel2();
 
-        if (levelTimer > 75f && !level3)
+        if (levelTimer > 5f && !level3)
             IncreaseLevel3();
 
         if (levelTimer > 100f && !level4)
@@ -132,7 +152,7 @@ public class Director : MonoBehaviour
         level2 = true;
         level++;
         // increase speed of sharks
-        sharkSpeedBoost += 25f;
+        sharkSpeedBoost += 20f;
         LevelUI.text = "Level: " + level;
 
     }
@@ -141,6 +161,7 @@ public class Director : MonoBehaviour
     private void IncreaseLevel3()
     {
         // spawn octopuses
+        spawnOctopus = true;
         GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().oxyenDepletionRate += 1.75f;
         level3 = true;
         level++;
@@ -155,7 +176,7 @@ public class Director : MonoBehaviour
         level++;
         LevelUI.text = "Level: "+level;
 
-        sharkSpeedBoost += 35f;
+        sharkSpeedBoost += 15f;
         maxSharks += 4;
     }
 }

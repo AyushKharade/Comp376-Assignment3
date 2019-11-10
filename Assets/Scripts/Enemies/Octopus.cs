@@ -5,10 +5,18 @@ using UnityEngine;
 public class Octopus : MonoBehaviour
 {
 
-    GameObject target;
+    float OctopousSpeed=2.5f;
+    float OctopousSwimSpeed=0.2f;
+    int faceDir = 1;
+
+    public GameObject target;
     public GameObject projectilePrefab;
 
     float cooldownTimer=0f;
+
+    float existTime=55f;
+    public float existTimer;
+    bool timeToLeave;
 
     void Start()
     {
@@ -19,17 +27,64 @@ public class Octopus : MonoBehaviour
     {
 
 
-        if (target != null && !target.GetComponent<Player>().isDead)
+        if (target != null)
         {
-            //Debug.Log("Found you, VERMIN!");
+            if (target.GetComponent<Player>().isDead)
+            {
+                target = null;
+            }
             ChasePlayer();
         }
-        else if (target.GetComponent<Player>().isDead)
+
+        // if no target mind business.
+        else if(!timeToLeave && target==null)
+        {
+            if (transform.position.z > 150)
+            {
+                transform.Rotate(0, 180, 0);
+                faceDir = -1;
+            }
+            else if (transform.position.z < -150)
+            {
+                transform.Rotate(0, -180, 0);
+                faceDir = 1;
+            }
+
+            // translation
+            transform.Translate(transform.forward * OctopousSwimSpeed*faceDir);
+
+            //fix orientation
+            if (transform.localRotation.x != 0 || transform.localRotation.z != 0)
+                transform.localRotation = Quaternion.Euler(0,transform.localRotation.y,0);
+
+
+
+        }
+
+        // exist
+        existTimer += Time.deltaTime;
+        if (existTimer > existTime)
+        {
+            //leave
             target = null;
+            timeToLeave = true;
+
+            // rotate
+            //Quaternion lookRotation = Quaternion.LookRotation(new Vector3(transform.position.x,transform.position.y,150));
+            //transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
+
+            // keep moving
+            transform.Translate(transform.forward*faceDir*OctopousSwimSpeed);
+            if (transform.position.z > 180 || transform.position.z < -180)
+            {
+                GameObject.FindGameObjectWithTag("Director").GetComponent<Director>().octopusCount -= 1;
+                Destroy(this.gameObject);
+            }
+        }
     }
 
 
-    //helped methods.
+    //helpee methods.
 
     void ChasePlayer()
     {
@@ -39,7 +94,7 @@ public class Octopus : MonoBehaviour
 
 
             Vector3 towardsTarget_Dir= (target.transform.position - transform.position).normalized; 
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(towardsTarget_Dir.x,0,towardsTarget_Dir.z));
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(towardsTarget_Dir.x,towardsTarget_Dir.y,towardsTarget_Dir.z));
             transform.rotation = Quaternion.Slerp(transform.rotation,lookRotation,5f*Time.deltaTime);
 
 
@@ -50,6 +105,9 @@ public class Octopus : MonoBehaviour
             Vector3 followDirection= (target.transform.position - transform.position).normalized;
             transform.Translate(followDirection*5f*Time.deltaTime);
 
+            //if(distance>10f)
+            //    transform.Translate(transform.forward*OctopousSpeed);
+
 
             if (cooldownTimer > 10f && distance>10f)
             {
@@ -59,17 +117,17 @@ public class Octopus : MonoBehaviour
                 Vector3 spawnPoint = transform.position;
 
                 //1
-                GameObject projectileRef=Instantiate(projectilePrefab,new Vector3(spawnPoint.x+2f,spawnPoint.y,spawnPoint.z),Quaternion.identity);
+                GameObject projectileRef=Instantiate(projectilePrefab,new Vector3(spawnPoint.x+3f,spawnPoint.y,spawnPoint.z),Quaternion.identity);
                 projectileRef.GetComponent<Rigidbody>().AddForce(forceDirection* Random.Range(80f, 110f), ForceMode.Impulse);
 
 
                 //2
-                GameObject projectileRef2 = Instantiate(projectilePrefab, new Vector3(spawnPoint.x, spawnPoint.y+2.5f, spawnPoint.z), Quaternion.identity);
+                GameObject projectileRef2 = Instantiate(projectilePrefab, new Vector3(spawnPoint.x, spawnPoint.y+3f, spawnPoint.z), Quaternion.identity);
                 projectileRef2.GetComponent<Rigidbody>().AddForce(forceDirection * Random.Range(80f, 110f), ForceMode.Impulse);
 
 
                 //3
-                GameObject projectileRef3 = Instantiate(projectilePrefab, new Vector3(spawnPoint.x, spawnPoint.y, spawnPoint.z+2f), Quaternion.identity);
+                GameObject projectileRef3 = Instantiate(projectilePrefab, new Vector3(spawnPoint.x, spawnPoint.y, spawnPoint.z+3f), Quaternion.identity);
                 projectileRef3.GetComponent<Rigidbody>().AddForce(forceDirection * Random.Range(80f,110f), ForceMode.Impulse);
 
             }
@@ -86,9 +144,17 @@ public class Octopus : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && !timeToLeave)
         {
             target = other.gameObject;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.tag == "Player")
+        {
+            collision.collider.GetComponent<Player>().RegisterHit();
         }
     }
 }

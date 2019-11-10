@@ -82,7 +82,8 @@ public class Shark : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
         // follow
         Vector3 followDirection = (target.transform.position - transform.position).normalized;
-        transform.Translate(followDirection * 15f * Time.deltaTime);
+        //transform.Translate(followDirection * 15f * Time.deltaTime);
+        transform.Translate(transform.forward * 25f * Time.deltaTime);
 
 
         if (target.tag == "Player")
@@ -92,8 +93,9 @@ public class Shark : MonoBehaviour
 
             if (target.GetComponent<Player>().onSurface)
             {
-                target = null;
                 target.GetComponent<Player>().SharksChasing -= 1;
+                target = null;
+                
             }
         }
         else  // its a figurine
@@ -116,6 +118,7 @@ public class Shark : MonoBehaviour
             //only player wasnt already being chased by two sharks
             if (other.GetComponent<Player>().SharksChasing < 1)
             {
+                AudioManager.instance.Play("Detected");
                 target = other.gameObject;
                 other.GetComponent<Player>().SharksChasing += 1;
             }

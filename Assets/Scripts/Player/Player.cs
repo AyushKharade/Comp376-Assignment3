@@ -84,6 +84,11 @@ public class Player : MonoBehaviour
 
         Dscript = GameObject.FindGameObjectWithTag("Director").GetComponent<Director>();
         oxyenDepletionRate = 1.5f;
+
+
+        //audio manager
+        AudioManager.instance.Play("Underwater");
+        AudioManager.instance.sounds[1].volume = 0;
     }
 
     // Update is called once per frame
