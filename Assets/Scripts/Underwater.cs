@@ -41,7 +41,7 @@ public class Underwater : MonoBehaviour
     {
         if (other.tag == "MainCamera")
         {
-            directionalLightRef.color = new Vector4(40 / 255f, 50 / 255f, 142 / 255f, 1);
+            //directionalLightRef.color = new Vector4(40 / 255f, 50 / 255f, 142 / 255f, 1);
             playerRef.GetComponent<Player>().onSurface = false;
             
         }

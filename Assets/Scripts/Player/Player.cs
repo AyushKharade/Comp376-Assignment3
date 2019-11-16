@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     //parameters
 
     public int health=2;
+    int lives = 5;
     public float swimSpeed;
     float fastSwimFactor = 1;
     public float carryWeightFactor=1f;
@@ -51,6 +52,7 @@ public class Player : MonoBehaviour
     public Text CarryCount;
     public Image health1;
     public Image health2;
+    public Text LivesUI;
 
     public GameObject secondScreen;
 
@@ -111,7 +113,7 @@ public class Player : MonoBehaviour
         {
             Debug.Log("Dead, respawning in: "+(respawnTime-respawnTimer));
             //coutdown and respawn
-            if (respawnTimer > respawnTime)
+            if (respawnTimer > respawnTime && lives != 0)
             {
                 Respawn();
                 respawnTimer = 0f;
@@ -120,6 +122,11 @@ public class Player : MonoBehaviour
             {
                 respawnTimer += Time.deltaTime;
             }
+        }
+
+        if (lives == 0)
+        {
+
         }
 
 
@@ -346,6 +353,8 @@ public class Player : MonoBehaviour
         health--;
         if (health <= 0)
         {
+            lives --;
+            LivesUI.text = "Lives: " +lives;
             animator.SetBool("isDead",true);
             isDead = true;
             GetComponent<Rigidbody>().useGravity = true;
