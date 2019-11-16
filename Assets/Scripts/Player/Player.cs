@@ -52,6 +52,8 @@ public class Player : MonoBehaviour
     public Image health1;
     public Image health2;
 
+    public GameObject secondScreen;
+
 
     //repspawn point
     public Transform respawnPoint;
@@ -203,9 +205,17 @@ public class Player : MonoBehaviour
         {
             rigidbodyRef.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
-        
 
 
+
+        // enable second camera
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (secondScreen.activeSelf)
+                secondScreen.SetActive(false);
+            else
+                secondScreen.SetActive(true);
+        }
 
 
 

@@ -12,6 +12,8 @@ public class Octopus : MonoBehaviour
     public GameObject target;
     public GameObject projectilePrefab;
 
+    Animator animator;
+
     float cooldownTimer=0f;
 
     float existTime=55f;
@@ -21,12 +23,18 @@ public class Octopus : MonoBehaviour
     void Start()
     {
         OctopousSwimSpeed += Random.Range(0f, 0.4f);
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
+        // animation
+        if (target == null)
+            animator.SetBool("attacking", false);
+        else
+            animator.SetBool("attacking",true);
 
-
+        // ai code
         if (target != null)
         {
             if (target.GetComponent<Player>().isDead)
