@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     //parameters
 
     public int health=2;
-    int lives = 5;
+    int lives = 3;
     public float swimSpeed;
     float fastSwimFactor = 1;
     public float carryWeightFactor=1f;
@@ -111,8 +111,8 @@ public class Player : MonoBehaviour
             ManageFlashCharges();
 
             //reset velocity if there any for now
-            if (GetComponent<Rigidbody>().velocity != Vector3.zero && !onSurface)
-                GetComponent<Rigidbody>().velocity = Vector3.zero;
+            //if (GetComponent<Rigidbody>().velocity != Vector3.zero && !onSurface)
+            //    GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
 
         if (isDead)
@@ -388,7 +388,8 @@ public class Player : MonoBehaviour
             LivesUI.text = "Lives: " +lives;
             animator.SetBool("isDead",true);
             isDead = true;
-            GetComponent<Rigidbody>().useGravity = true;
+            //GetComponent<Rigidbody>().useGravity = true;
+            GetComponent<Rigidbody>().drag = 0;
         }
 
         // UI
@@ -409,6 +410,7 @@ public class Player : MonoBehaviour
         carryWeightFactor = 1f;
         itemsCarrying = 0;
         oxygen = 100f;
+        flashCharges = 100f;
         transform.position = respawnPoint.position;
         GetComponent<Rigidbody>().useGravity = true;
         UI_E.GetComponent<Image>().enabled = false;

@@ -27,13 +27,12 @@ public class Underwater : MonoBehaviour
     {
         if (other.tag == "MainCamera")
         {
-            ///playerRef.GetComponent<Rigidbody>().useGravity=false;
-            playerRef.GetComponent<Rigidbody>().drag = 0.2f;
+            //playerRef.GetComponent<Rigidbody>().useGravity=false;
+            playerRef.GetComponent<Rigidbody>().drag = 5f;
             playerRef.GetComponent<Rigidbody>().velocity = Vector3.zero;
             playerRef.GetComponent<Player>().onSurface = false;
             AudioManager.instance.sounds[1].volume = 0.7f;
             //Debug.Log(AudioManager.instance.sounds[1].name);
-            //Physics.gravity = new Vector3(0,-1.5f,0);
         }
     }
 
