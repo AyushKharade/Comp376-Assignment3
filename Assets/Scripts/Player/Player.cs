@@ -37,6 +37,10 @@ public class Player : MonoBehaviour
     public float oxygen = 100f;
     [HideInInspector]public float oxyenDepletionRate = 1.5f;
 
+    public float flashCharges = 100f;
+    public GameObject FlashLight;
+
+
     // timer variables
     float throwTimer;
     float interactTimer;
@@ -53,6 +57,7 @@ public class Player : MonoBehaviour
     public Image health1;
     public Image health2;
     public Text LivesUI;
+    public GameObject FlashUI;
 
     public GameObject secondScreen;
 
@@ -103,6 +108,7 @@ public class Player : MonoBehaviour
             PlayerMovement();
             Abilities();
             ManageOxygen();
+            ManageFlashCharges();
 
             //reset velocity if there any for now
             if (GetComponent<Rigidbody>().velocity != Vector3.zero && !onSurface)
@@ -225,7 +231,13 @@ public class Player : MonoBehaviour
         }
 
 
-
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (FlashLight.activeSelf)
+                FlashLight.SetActive(false);
+            else
+                FlashLight.SetActive(true);
+        }
 
 
 
@@ -347,6 +359,25 @@ public class Player : MonoBehaviour
         }
     }
 
+
+    private void ManageFlashCharges()
+    {
+        if (FlashLight.activeSelf)
+        {
+            flashCharges -= 5 * Time.deltaTime;
+            if (flashCharges <= 0)
+                FlashLight.SetActive(false);
+        }
+        else
+        {
+            if (flashCharges < 100)
+                flashCharges += 7.5f * Time.deltaTime;
+        }
+
+        // update UI
+        float flashUI_Value = flashCharges / 100f;
+        FlashUI.transform.localScale = new Vector3(flashUI_Value,1,1);
+    }
 
     public void RegisterHit()
     {
