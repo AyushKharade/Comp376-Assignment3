@@ -119,7 +119,7 @@ public class Player : MonoBehaviour
         {
             Debug.Log("Dead, respawning in: "+(respawnTime-respawnTimer));
             //coutdown and respawn
-            if (respawnTimer > respawnTime && lives != 0)
+            if (respawnTimer > respawnTime && lives > 0)
             {
                 Respawn();
                 respawnTimer = 0f;
@@ -130,10 +130,6 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (lives == 0)
-        {
-
-        }
 
 
 
